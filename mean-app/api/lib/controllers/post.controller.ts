@@ -2,6 +2,7 @@ import Controller from '../interfaces/controller.interface';
 import { Request, Response, NextFunction, Router } from 'express';
 import {checkPostCount} from '../middlewares/checkPostCount.middleware';
 import DataService from '../modules/services/data.service';
+import Joi = require('joi');
 
 let testArr = [4,5,6,3,5,3,7,5,13,5,6,4,3,6,3,6];
 
@@ -33,6 +34,12 @@ class PostController implements Controller {
 private addData = async (request: Request, response: Response, next: NextFunction) => {
     const {title, text, image} = request.body;
  
+    const schema = Joi.object({
+        title: Joi.string().required(),
+        text: Joi.string().required(),
+        image: Joi.string().uri().required()
+     });
+
     const readingData = {
         title,
         text,
@@ -117,6 +124,9 @@ private deleteAllPosts = async (request: Request, response: Response, next: Next
         response.status(500).json({ error: 'Internal server error.' });
     }
 };
+
+
+
 
 }
 
